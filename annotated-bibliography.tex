@@ -1,0 +1,66 @@
+% This is a sample document using the University of Minnesota, Morris, Computer Science
+% Senior Seminar modification of the ACM sig-alternate style to generate a simple annotated
+% bibliography. The idea is that this document is fairly short, consisting of a brief description
+% of your sources and how you intend to use them (or not). Most of the ``content'' of the
+% generated document comes from the bibliography file, including the notes field which will
+% provide the annotations.
+
+% See https://github.com/UMM-CSci/Senior_seminar_templates for more info and to make
+% suggestions and corrections.
+
+\documentclass{sig-alternate}
+
+\usepackage{url}
+
+\begin{document}
+
+% --- Author Metadata here ---
+%%% REMEMBER TO CHANGE THE SEMESTER AND YEAR AS NECESSARY
+\conferenceinfo{UMM CSci Senior Seminar Conference, October 2020}{Morris, MN}
+
+\title{Recent advances in smartphone computational photography}
+
+\numberofauthors{1}
+
+\author{
+% The command \alignauthor (no curly braces needed) should
+% precede each author name, affiliation/snail-mail address and
+% e-mail address. Additionally, tag each line of
+% affiliation/address with \affaddr, and tag the
+% e-mail address with \email.
+\alignauthor
+Paul Friederichsen\\
+	\affaddr{Division of Science and Mathematics}\\
+	\affaddr{University of Minnesota, Morris}\\
+	\affaddr{Morris, Minnesota, USA 56267}\\
+	\email{fried701@morris.umn.edu}
+}
+
+\maketitle
+
+\begin{abstract}
+My topic is recent advances in the computational photography used in smartphones. Specifically looking at the use of multi-frame algorithms to increase image resolution and quality. I'm mainly looking at a couple of papers by researchers at Google on algorithms used in the Super-Res Zoom and Night Sight features of the Google Pixel series of smartphones.
+\end{abstract}
+
+\section{Discussion of sources}
+
+
+\subsection{Sources I expect to use (and how)}
+
+My primary two sources are \cite{Wronski2019, Liba2019}.
+
+
+% The following two commands are all you need to
+% produce the bibliography for the citations in your paper.
+\bibliographystyle{abbrv}
+% annotated_bibliography.bib is the name of the BibTex file containing 
+% all the bibliography entries for this example. Note that you *don't* include the .bib ending
+% in the \bibliography command.
+\bibliography{paper}  
+
+% You must have a ".bib" file and remember to run:
+%     pdflatex bibtex pdflatex pdflatex
+% in order to see all the citation references correctly.
+
+\end{document}
+
