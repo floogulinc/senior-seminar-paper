@@ -15,7 +15,8 @@ journal = {ACM Trans. Graph.},
 month = jul,
 articleno = {28},
 numpages = {18},
-keywords = {image processing, super-resolution, photography, computational photography}
+keywords = {image processing, super-resolution, photography, computational photography},
+note={\url{https://doi.org/10.1145/3306346.3323024}}
 }
 
 @article{Liba2019,
@@ -35,7 +36,8 @@ journal = {ACM Trans. Graph.},
 month = nov,
 articleno = {164},
 numpages = {16},
-keywords = {low-light imaging, computational photography}
+keywords = {low-light imaging, computational photography},
+note={\url{https://doi.org/10.1145/3355089.3356508}}
 }
 
 @article{Hasinoff2016,
@@ -55,5 +57,61 @@ journal = {ACM Trans. Graph.},
 month = nov,
 articleno = {192},
 numpages = {12},
-keywords = {high dynamic range, computational photography}
+keywords = {high dynamic range, computational photography},
+note={\url{https://doi.org/10.1145/2980179.2980254}}
+}
+
+@misc{ wiki:BayerFilter,
+    author = "{Wikipedia contributors}",
+    title = "Bayer filter --- {Wikipedia}{,} The Free Encyclopedia",
+    year = "2020",
+    url = "https://en.wikipedia.org/w/index.php?title=Bayer_filter&oldid=977384299",
+    howpublished = "\url{https://en.wikipedia.org/w/index.php?title=Bayer_filter&oldid=977384299}",
+    note = "[Online; accessed 10-September-2020]"
+}
+  
+@misc{ wiki:Demosaicing,
+    author = "{Wikipedia contributors}",
+    title = "Demosaicing --- {Wikipedia}{,} The Free Encyclopedia",
+    year = "2020",
+    url = "https://en.wikipedia.org/w/index.php?title=Demosaicing&oldid=935211330",
+    howpublished = "\url{https://en.wikipedia.org/w/index.php?title=Demosaicing&oldid=935211330}",
+    note = "[Online; accessed 10-September-2020]"
+}
+
+@misc{ wiki:Aliasing,
+    author = "{Wikipedia contributors}",
+    title = "Aliasing --- {Wikipedia}{,} The Free Encyclopedia",
+    year = "2020",
+    url = "https://en.wikipedia.org/w/index.php?title=Aliasing&oldid=965615959",
+    howpublished = "\url{https://en.wikipedia.org/w/index.php?title=Aliasing&oldid=965615959}",
+    note = "[Online; accessed 10-September-2020]"
+  }
+
+@inproceedings{46440,
+title	= {Fast Fourier Color Constancy},
+author	= {Jonathan T. Barron and Yun-Ta Tsai},
+year	= {2017},
+booktitle	= {CVPR}
+}
+@inproceedings{Barron2017,
+  author={J. T. {Barron} and Y. {Tsai}},
+  booktitle={2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}, 
+  title={Fast Fourier Color Constancy}, 
+  year={2017},
+  pages={6950-6958},
+  abstract={We present Fast Fourier Color Constancy (FFCC), a color constancy algorithm which solves illuminant estimation by reducing it to a spatial localization task on a torus. By operating in the frequency domain, FFCC produces lower error rates than the previous state-of-the-art by 13-20\% while being 250-3000× faster. This unconventional approach introduces challenges regarding aliasing, directional statistics, and preconditioning, which we address. By producing a complete posterior distribution over illuminants instead of a single illuminant estimate, FFCC enables better training techniques, an effective temporal smoothing technique, and richer methods for error analysis. Our implementation of FFCC runs at ~700 frames per second on a mobile device, allowing it to be used as an accurate, real-time, temporally-coherent automatic white balance algorithm.},
+  keywords={error analysis;fast Fourier transforms;image colour analysis;smoothing methods;statistical distributions;FFCC;Fast Fourier Color Constancy;color constancy algorithm;illuminant estimation;spatial localization task;single illuminant estimate;frequency domain operation;aliasing;directional statistics;complete posterior distribution;temporal smoothing technique;error analysis;accurate real-time temporally-coherent automatic white balance algorithm;Image color analysis;Histograms;Computer vision;Cameras;Two dimensional displays;Standards},
+  doi={10.1109/CVPR.2017.735},
+  ISSN={1063-6919},
+  month={July},
+  note="\url{https://ieeexplore.ieee.org/document/8100218}, \url{https://research.google/pubs/pub46440/}"
+}
+
+@misc{blog:Wronski2018, title={See Better and Further with Super Res Zoom on the Pixel 3}, url={https://ai.googleblog.com/2018/10/see-better-and-further-with-super-res.html}, journal={Google AI Blog}, publisher={Google}, author={Wronski, Bartlomiej and Milanfar, Peyman}, year={2018}, month={Oct},
+note={\url{https://ai.googleblog.com/2018/10/see-better-and-further-with-super-res.html}}
+}
+
+@misc{blog:Levoy2018, title={Night Sight: Seeing in the Dark on Pixel Phones}, url={https://ai.googleblog.com/2018/11/night-sight-seeing-in-dark-on-pixel.html}, journal={Google AI Blog}, publisher={Google}, author={Levoy, Marc and Pritch, Yael}, year={2018}, month={Nov},
+note={\url{https://ai.googleblog.com/2018/11/night-sight-seeing-in-dark-on-pixel.html}}
 }
