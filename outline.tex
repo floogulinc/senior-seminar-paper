@@ -1,0 +1,170 @@
+\documentclass{sig-alternate}
+
+\usepackage{color}
+
+\setlength{\marginparwidth}{2cm}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\usepackage{url}
+
+\begin{document}
+
+% --- Author Metadata here ---
+%%% REMEMBER TO CHANGE THE SEMESTER AND YEAR AS NECESSARY
+\conferenceinfo{UMM CSci Senior Seminar Conference, October 2020}{Morris, MN}
+
+\title{Recent advances in smartphone computational photography}
+
+\numberofauthors{1}
+
+\author{
+% The command \alignauthor (no curly braces needed) should
+% precede each author name, affiliation/snail-mail address and
+% e-mail address. Additionally, tag each line of
+% affiliation/address with \affaddr, and tag the
+% e-mail address with \email.
+\alignauthor
+Paul Friederichsen\\
+	\affaddr{Division of Science and Mathematics}\\
+	\affaddr{University of Minnesota, Morris}\\
+	\affaddr{Morris, Minnesota, USA 56267}\\
+	\email{fried701@morris.umn.edu}
+}
+
+\maketitle
+
+\begin{abstract}
+My topic is recent advances in the computational photography used in smartphones. Specifically looking at the use of multi-frame algorithms to increase image resolution and quality. I'm mainly looking at a couple of papers by researchers at Google on algorithms used in the Super-Res Zoom and Night Sight features of the Google Pixel series of smartphones.
+\todo[inline]{Not really an abstract at this point. Subject to change.}
+\end{abstract}
+
+\section*{\uppercase{Key points}}
+
+This paper addresses how we can improve smartphone camera photography. Phone cameras present many challenges, most of which come from the need for them to be physically small. Their small size puts a fundamental limit on their ability to resolve detail and especially affects low-light photography. This paper will look at two approaches to improve smartphone photography through software techniques.
+
+The first of two primary sources is titled ``Handheld Multi-Frame Super-Resolution" \cite{Wronski2019}. It describes a new method for merging bursts of raw images using the natural motion of the hand holding the device (or by moving the sensor in such a way to emulate that). One of the major contributions from this approach is the use of natural hand motion to obtain increased detail. It builds on work done in one of my background sources, ``Burst photography for high dynamic range and low-light imaging on mobile cameras" \cite{Hasinoff2016}.
+
+The second primary source is ``Handheld Mobile Photography in Very Low Light" \cite{Liba2019}. This paper describes a new photography system (or pipeline) that improves the ability to capture photos in low light. This is done mainly through improvements in motion metering, motion-aware burst merging, and low-light optimized auto white balance. This system also builds on work done in \cite{Hasinoff2016}.
+
+Both primary sources provide good testing and comparisons in their results sections. Both systems are in commercial use in Google Pixel phones.
+
+I will probably need to assume the audience has a basic knowledge of how digital images are formed (pixels, RGB) but I will need to introduce more specific things like Bayer filters and demosaicing as well as how burst capturing works in modern smartphones.
+
+\section{Introduction}
+
+Introduce the problem-space and the basics of the two approaches that will be discussed.
+
+% ----------------------------------------
+\section{Background}
+
+Include some basic background information on some terms that will be important.
+
+\subsection{Burst photography}
+
+This is probably the most important part of the background information. I will introduce the general idea of burst photography and the prior work both of my primary sources build on from \cite{Hasinoff2016}.
+
+\subsubsection{Burst processing pipeline}
+
+\subsection{Bayer filters}
+
+Background information on Bayer filters. Some of this will come from \cite{wiki:BayerFilter}.
+
+\subsection{Demosaicing}
+
+Background information on demosaicing. Some of this will come from \cite{wiki:Demosaicing}.
+
+\subsection{Aliasing}
+
+Background information on aliasing, specifically in regard to signal processing. Some of this will come from \cite{wiki:Aliasing}.
+
+% ----------------------------------------
+\section{Handheld super-resolution}
+
+This section is on the first primary source, \cite{Wronski2019}.
+
+\subsection{Algorithm overview}
+
+This will describe the general structure of the approach including frame acquisition, registration and alignment, and merging. The merging algorithm itself is explained in more detail later.
+
+\subsection{Hand movement based super-resolution}
+
+This section goes over the research on hand motion and why it is able to be used for super-resolution.
+
+\subsection{Proposed super-resolution approach}
+
+This will be the main part for this section and will describe the specifics of the algorithm proposed in \cite{Wronski2019}. 
+
+\subsubsection{Kernel reconstruction}
+
+\subsubsection{Motion Robustness}
+
+\subsection{Results}
+
+A discussion of the results and comparisons discussed in the paper.
+
+\subsubsection{Limitations}
+
+% ----------------------------------------
+\section{Handheld low light photography}
+
+This section is on the second primary source, \cite{Liba2019}.
+
+\subsection{Motion Metering}
+
+Selecting exposure time based on a prediction of future movement.
+
+\subsection{Motion-adaptive burst merging}
+
+Builds on the Fourier domain temporal merging technique in \cite{Hasinoff2016} and improves the merging algorithm for low-light.
+
+\subsection{Auto white balance in low-light}
+
+Uses a new dataset to create a Fast Fourier Color Constancy algorithm for better white balance in low-light images.
+
+\subsection{Tone mapping}
+
+Looks at how to do tonemapping for low-light images so that they appear natural to humans.
+
+\subsection{Results}
+
+A discussion of the results and comparisons discussed in the paper.
+
+\subsubsection{Limitations}
+
+% ----------------------------------------
+\section{Conclusions}
+
+Some conclusion on how both systems are currently in use and future work that can be done with them.
+
+\section{Acknowledgements}
+
+
+% Bibliography
+% ----------------------------------------
+
+% Primary Sources
+\nocite{Wronski2019, Liba2019}
+
+% Background: supporting papers for primary sources
+\nocite{Hasinoff2016, Barron2017}
+
+% Background: Wikipedia articles
+\nocite{wiki:BayerFilter, wiki:Demosaicing, wiki:Aliasing}
+
+% Background: Blogs accompanying primary sources
+\nocite{blog:Wronski2018, blog:Levoy2018}
+
+% The following two commands are all you need to
+% produce the bibliography for the citations in your paper.
+\bibliographystyle{abbrv}
+% annotated_bibliography.bib is the name of the BibTex file containing 
+% all the bibliography entries for this example. Note that you *don't* include the .bib ending
+% in the \bibliography command.
+\bibliography{paper}  
+
+% You must have a ".bib" file and remember to run:
+%     pdflatex bibtex pdflatex pdflatex
+% in order to see all the citation references correctly.
+
+\end{document}
+
