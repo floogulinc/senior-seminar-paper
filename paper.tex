@@ -73,7 +73,7 @@ Both of the approaches in this paper build on the end-to-end burst processing pi
 
 \subsection{Bayer filter}
 
-A bayer filter is a type of color filter array (CFA). The majority of digital image sensors in digital cameras and phones use a Bayer filter mosaic pattern to arrange RGB color filters on the sensor. The pattern consists of 50\% green, 25\% red, and 25\% blue pixels \cite{wiki:BayerFilter}. This ratio emulates the color sensitivity of the human eye. Due to this pattern on the sensor, the raw output of a digital camera also has each pixel filtered to only red, green, or blue and a demosaicing algorithm must be used to interpolate the other values for each pixel \cite{wiki:BayerFilter}.
+A Bayer filter is a type of color filter array (CFA). The majority of digital image sensors in digital cameras and phones use a Bayer filter mosaic pattern to arrange RGB color filters on the sensor. The pattern consists of 50\% green, 25\% red, and 25\% blue pixels \cite{wiki:BayerFilter}. This ratio emulates the color sensitivity of the human eye. Due to this pattern on the sensor, the raw output of a digital camera also has each pixel filtered to only red, green, or blue and a demosaicing algorithm must be used to interpolate the other values for each pixel \cite{wiki:BayerFilter}.
 
 \begin{figure}
 \centering
@@ -109,7 +109,7 @@ Wronski et al.~\cite{Wronski2019} introduce an algorithm that uses multiple shif
 
 \subsection{Algorithm overview}
 
-Wronski et al.'s approach is a process that starts with the the acquisition of a burst from the continous ring buffer of raw frames in the phone's camera application. Next, a single frame is chosen and the rest are aligned to it using a refined version of the algorithm by Hasinoff et al.~\cite{Hasinoff2016}.
+Wronski et al.'s approach is a process that starts with the the acquisition of a burst from the continuous ring buffer of raw frames in the phone's camera application. Next, a single frame is chosen and the rest are aligned to it using a refined version of the algorithm by Hasinoff et al.~\cite{Hasinoff2016}.
 % TODO: elaborate on the alignment algorithm
 Each frame's local contributions are estimated through kernel regression (Section~\ref{sec:kernelReconstruction}) and accumulated across an whole burst for each of the three color planes.
 Next, in parallel, the kernel shapes are adjusted based on estimated local gradients and the sample contributions are adjusted weighted based on a robustness model (Section~\ref{sec:robustnessModel}).
