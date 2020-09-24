@@ -73,7 +73,7 @@ Both of the approaches in this paper build on the end-to-end burst processing pi
 
 \subsection{Bayer filter}
 
-The majority of digital image sensors in digital cameras and phones use a Bayer filter mosaic pattern to arrange RGB color filters on the sensor. The pattern consists of 50\% green, 25\% red, and 25\% blue pixels \cite{wiki:BayerFilter}. This ratio emulates the color sensitivity of the human eye. Due to this pattern on the sensor, the raw output of a digital camera also has each pixel filtered to only red, green, or blue and a demosaicing algorithm must be used to interpolate the other values for each pixel \cite{wiki:BayerFilter}.
+A bayer filter is a type of color filter array (CFA). The majority of digital image sensors in digital cameras and phones use a Bayer filter mosaic pattern to arrange RGB color filters on the sensor. The pattern consists of 50\% green, 25\% red, and 25\% blue pixels \cite{wiki:BayerFilter}. This ratio emulates the color sensitivity of the human eye. Due to this pattern on the sensor, the raw output of a digital camera also has each pixel filtered to only red, green, or blue and a demosaicing algorithm must be used to interpolate the other values for each pixel \cite{wiki:BayerFilter}.
 
 \begin{figure}
 \centering
@@ -84,7 +84,7 @@ The majority of digital image sensors in digital cameras and phones use a Bayer 
 
 \subsection{Demosaicing}
 
-Background information on demosaicing. Some of this will come from \cite{wiki:Demosaicing}.
+A demosaicing algorithm reconstructs a full color image from the separate red, green, or blue only pixels from an image sensor with a CFA \cite{wiki:Demosaicing}. There are many methods for this, the simplest ones interpolate the values for the other two color channels of a given pixel based on nearby pixels from the CFA image of those colors.
 
 The demosaicing process may introduce various artifacts in the final image. These typically include false color artifacts like zippering and Moiré patterns \cite{Wronski2019}.
 
