@@ -15,6 +15,12 @@
 
 \usepackage{url}
 
+\usepackage{subcaption}
+
+\usepackage{graphicx}
+
+\graphicspath{ {./figures/} }
+
 %%%%% Uncomment the following line and comment out the previous one
 %%%%% to remove all comments
 %%%%% NOTE: comments still occupy a line even if invisible;
@@ -48,59 +54,86 @@ Paul Friederichsen\\
 \maketitle
 
 \begin{abstract}
-(This is currently just a topic statement more than an abstract)
 
-My topic is recent advances in the computational photography used in smartphones. Specifically looking at the use of multi-frame algorithms to increase image resolution and quality. I'm mainly looking at a couple of papers by researchers at Google on algorithms used in the Super-Res Zoom and Night Sight features of the Google Pixel series of smartphones.
+Smartphone cameras present many challenges, most of which come from the need for them to be physically small. Their small size puts a fundamental limit on their ability to resolve detail and especially affects the ability to zoom and low-light photography. This paper presents two approaches to improve smartphone photography through software techniques. The first is handheld super-resolution which uses natural hand movement to improve the resolution of burst images. The second approach is a system which improves low light photography in smartphones.
+
 \end{abstract}
 
 \keywords{computational photography, super-resolution, image processing, low-light imaging}
 
 \section{Introduction}
 
-Smartphone cameras present many challenges, most of which come from the need for them to be physically small. Their small size puts a fundamental limit on their ability to resolve detail and especially affects low-light photography. This paper will look at two approaches to improve smartphone photography through software techniques.
+Smartphone cameras use very small sensors with fixed apertures. This means their ability to gather light is significantly reduced compared to larger dedicated cameras. Most modern smartphones use a burst system to capture multiple images when the user presses the capture button and merges them to improve image quality. 
+
+In this paper, I first introduce some background information concerning various photography and signal processing terms. I then introduce and discuss two approaches to improving smartphone photography that augment the existing burst pipeline. The first uses hand movement to increase spatial resolution (Section~\ref{sec:handheldSuperRes}). The second approach is a a system that uses a number of techniques to improve the low-light abilities of smartphone cameras (Section~\ref{sec:handheldLowLight}.
 
 % ----------------------------------------
 \section{Background}
+\label{sec:background}
+
+In this section I explain several key concepts that are important for the work in Sections \ref{sec:handheldSuperRes} and \ref{sec:handheldLowLight}. This includes Burst photography (Section~\ref{sec:background:burstPhotography}), Bayer filters (Section~\ref{sec:background:bayerFilter}), demosaicing (Section~\ref{sec:background:demosaicing}), aliasing (Section~\ref{sec:background:aliasing}), super-resolution (Section~\ref{sec:background:superResolution}), and kernels (Section~\ref{sec:background:kernels}).
 
 \subsection{Burst photography}
+\label{sec:background:burstPhotography}
 
-Most smartphones use a burst processing pipeline for their cameras. Generally, burst processing involves taking a series of raw exposures and merging them together to form the final image. Most smartphones operate in a \emph{Zero-Shutter Lag} mode by default. In this mode raw frames are continuously captured to a ring buffer while the camera app is open. When the user presses the shutter button, a number of the most recent frames are sent to the camera processing pipeline.
+Most smartphones use a burst processing pipeline for their cameras. Generally, burst processing involves taking a series of raw exposures and merging them together to form the final image. Most smartphones operate in a \emph{zero-shutter lag} mode by default. In this mode raw frames (the full unprocessed sensor output) are continuously captured to a temporary memory while the camera app is open. When the user presses the shutter button, several of the most recent frames are sent to the camera processing pipeline.
 
 Both of the approaches in this paper build on the end-to-end burst processing pipeline from Hasinoff et al. \cite{Hasinoff2016} which used bursts of constant low-exposure frames to increase dynamic range and signal-to-noise ratio.
-% TODO: more on Hasinoff
-
-\newpage
+\todo[inline]{more on Hasinoff}
 
 \subsection{Bayer filter}
+\label{sec:background:bayerFilter}
 
-A Bayer filter is a type of color filter array (CFA). The majority of digital image sensors in digital cameras and phones use a Bayer filter mosaic pattern to arrange RGB color filters on the sensor. The pattern consists of 50\% green, 25\% red, and 25\% blue pixels \cite{wiki:BayerFilter}. This ratio emulates the color sensitivity of the human eye. Due to this pattern on the sensor, the raw output of a digital camera also has each pixel filtered to only red, green, or blue and a demosaicing algorithm must be used to interpolate the other values for each pixel \cite{wiki:BayerFilter}.
+A Bayer filter is a type of color filter array (CFA). The majority of digital image sensors in digital cameras and phones use a Bayer filter mosaic pattern to arrange RGB color filters on the sensor. The pattern consists of 50\% green, 25\% red, and 25\% blue pixels. This ratio emulates the color sensitivity of the human eye. Due to this pattern on the sensor, the raw output of a digital camera also has each pixel filtered to only red, green, or blue and a demosaicing algorithm must be used to interpolate the other values for each pixel. \cite{wiki:BayerFilter}
 
 \begin{figure}
 \centering
-\psfig{file=figures/Bayer_pattern_on_sensor.pdf,width =3in}
+%\psfig{file=figures/Bayer_pattern_on_sensor.pdf,width =3in}
+\includegraphics[width=3in]{Bayer_pattern_on_sensor}
 \caption{A Bayer pattern on a sensor in isometric perspective \cite{wiki:BayerFilter}.}
 \label{fig:BayerPattern}
 \end{figure}
 
 \subsection{Demosaicing}
+\label{sec:background:demosaicing}
 
 A demosaicing algorithm reconstructs a full color image from the separate red, green, or blue only pixels from an image sensor with a CFA \cite{wiki:Demosaicing}. There are many methods for this, the simplest ones interpolate the values for the other two color channels of a given pixel based on nearby pixels from the CFA image of those colors.
 
 The demosaicing process may introduce various artifacts in the final image. These typically include false color artifacts like zippering and Moiré patterns \cite{Wronski2019}.
+\todo[inline]{I might need to explain zippering and Moiré patterns}
 
 \subsection{Aliasing}
+\label{sec:background:aliasing}
 
-Background information on aliasing, specifically in regard to signal processing. Some of this will come from \cite{wiki:Aliasing}.
+\todo[inline]{Background information on aliasing, specifically in regard to signal processing. Some of this will come from \cite{wiki:Aliasing}.}
 
 \subsection{Super-resolution}
+\label{sec:background:superResolution}
+
+Generally, super-resolution is a type of technique which increases the resolution of an image. While there are techniques that work on a single image, we will focus on using multiple frames for super-resolution. The main requirements of multi-frame super-resolution have been identified as accurate sub-pixel registration, the existence of aliasing, and a good signal-to-noise ratio \cite{Wronski2019}. Sub-pixel registration refers to the ability to align frames with sub-pixel accuracy, that is 
+
+%requirements
+%- subpixels
+%- aliasing
+
+\todo[inline]{subpixel offsets}
+
+\subsection{Kernels}
+\label{sec:background:kernels}
+
+
 
 % ----------------------------------------
 \section{Handheld super-resolution}
+\label{sec:handheldSuperRes}
+
+\todo[inline]{actually mention how this is used to allow better zooming}
 
 \begin{figure*}[t!]
 \centering
 % TODO: Size correctly for width
-\psfig{file=figures/Wronski2019-figure-2.pdf,width =7in}
+%\psfig{file=figures/Wronski2019-figure-2.pdf,width =7in}
+\includegraphics[width=7in]{Wronski2019-figure-2}
 \caption{An overview of the approach used by Wronski et al. \cite{Wronski2019}}
 \label{fig:Wronski2019Fig2}
 \end{figure*}
@@ -111,18 +144,22 @@ Wronski et al.~\cite{Wronski2019} introduce an algorithm that uses multiple shif
 
 Wronski et al.'s approach is a process that starts with the the acquisition of a burst from the continuous ring buffer of raw frames in the phone's camera application. Next, a single frame is chosen and the rest are aligned to it using a refined version of the algorithm by Hasinoff et al.~\cite{Hasinoff2016}.
 % TODO: elaborate on the alignment algorithm
-Each frame's local contributions are estimated through kernel regression (Section~\ref{sec:kernelReconstruction}) and accumulated across an whole burst for each of the three color planes.
+Each frame's local contributions are estimated through kernel regression (Section~\ref{sec:kernelReconstruction}) and accumulated across a whole burst for each of the three color planes.
 Next, in parallel, the kernel shapes are adjusted based on estimated local gradients and the sample contributions are adjusted weighted based on a robustness model (Section~\ref{sec:robustnessModel}).
 The final RGB image is obtained by normalizing the accumulated contributions for each of the three color planes and merging them together.
 
 \subsection{Hand movement based super-resolution}
 
+\todo[inline]{use tree figure from Wronski either here or in background about super res/subpixels}
+
 One of the important conditions for multi-frame super-resolution is that the input contains multiple aliased images that are sampled at different subpixel offsets. When someone is holding an object there is a natural and involuntary slight hand movement present. Wronski et al. shows how this periodic, random movement while the camera is capturing a burst frames provides sufficient subpixel coverage to create a super-resolution image.
 
-Wronski et al. analyzed hand movement in a set of 86 bursts captured by 10 different users during regular smartphone photography. They used the rotational measurements from the phone's gyroscope but ignored the effect of translations in the analysis. Their analysis showed that hand movement creates uniformly random angular displacements and relatively slow rotation of the device.
+Wronski et al. analyzed hand movement in a set of 86 bursts captured by 10 different users during regular smartphone photography.
+%They used the rotational measurements from the phone's gyroscope but ignored the effect of translations in the analysis.
+Their analysis showed that hand movement creates uniformly random angular displacements and relatively slow rotation of the device.
 
 
-While hand shake over a long time interval uniformly random, over a short burst it could be more of a straight line.
+While hand shake over a long time is interval uniformly random, over a short burst it could be more of a straight line.
 Wronski et al. show that this also provides a sufficiently uniform distribution of subpixel samples.
 Using the equidistribution theorem, which states that the sequence $\{a,2a,3a,\dotsc \bmod 1\}$ is uniformly distributed (assuming $a$ is an irrational number), with each pixel as a point sample and a least random scenario (the hand motion is regular and linear), the samples from all frames combined will be approximately uniformly distributed within the subpixel space.
 
@@ -130,32 +167,148 @@ Wronski et al. also tested this concept empirically by measuring subpixel offset
 
 \subsection{Proposed super-resolution approach}
 
+Super-resolution involves recreating a high resolution signal from many lower resolution samples. Due to the random distribution of pixel shifts that result from hand movement, kernel regression was deemed a good technique for this reconstruction. Wronski et al. used anisotropic Gaussian Radial Basis Function (RBF) kernels (Section~\ref{sec:kernelReconstruction}) and a statistical robustness model (Section~\ref{sec:robustnessModel}) to combine burst frames into a higher resolution image.
+
 \subsubsection{Kernel reconstruction}
 \label{sec:kernelReconstruction}
+
+The core idea of Wronski et al's algorithm is considering the pixels of multiple raw frames as randomly offset, aliased, and noisy measurements of three original continuous signals, one for each color channel. The algorithm creates the final output image pixel-by-pixel. For each output pixel, it evaluates the local contributions to each of the three color channels from different input frames since each raw image pixel is specific to a single color channel. 
+
+The process for each color channel can be described as:
+\begin{equation}
+C(x, y)=\frac{\sum_{n} \sum_{i} c_{n, i} \cdot w_{n, i} \cdot \hat{R}_{n}}{\sum_{n} \sum_{i} w_{n, i} \cdot \hat{R}_{n}}
+\end{equation}
+where $(x,y)$ is the coordinates of the pixel, $\sum_{n}$ is the sum of values of that pixel over all contributing frames, $\sum_{i}$ is the sum over samples (pixels) in a local neighborhood ($3\times 3$), $c_{n, i}$ is the value of the pixel at frame $n$ and sample $i$, $w_{n, i}$ is the local sample weight, and $\hat{R}_{n}$ is the local motion robustness score (Section~\ref{sec:robustnessModel}), it is equal to 1 for the base frame since that's what the other frames are aligned against. \cite{Wronski2019}
+\todo[inline]{don't know if i actually need this equation to explain the idea}
+
+The local pixel weights are calculated using a 2D unnormalized anisotropic Gaussian radial basis function kernel:
+\begin{equation}
+w_{n, i}=\exp \left(-\frac{1}{2} d_{i}^{T} \Omega^{-1} d_{i}\right)
+\end{equation}
+Where $\Omega$ is the kernel covariance matrix and $d_{i}$ is the offset vector of sample i to the output pixel ($d_{i}=\left[x_{i}-x_{0}, y_{i}-y_{0}\right]^{T}$).
+\todo[inline]{needs more on this function, what things are and why}
+
+The kernel covariance matrix is computed by analyzing the local gradient structure tensor of every frame. This is done on half-resolution images to improve performance and resistance to noise.
+\todo[inline]{how much detail do I need on this, the original paper spends half a page on the specifics}
 
 \subsubsection{Motion Robustness}
 \label{sec:robustnessModel}
 
+It is difficult to reliably align the sequence of images in a burst and even assuming a perfect alignment, changes in the scene and occlusion would still result in some areas of the scene being poorly represented in many frames of the burst. This needs to be taken into account to prevent severe artifacting. To combine frames robustly, a confidence level is assigned to the local neighborhood of each pixel, the map of these confidences is called a \emph{robustness map}.
+% try to reword below
+A robustness value of one corresponds to fully merged areas while a value of zero means rejected areas.
+
+The robustness values are determined by a statistical robustness model which must distinguish between aliasing, as it is needed for super-resolution, and frame misalignment, which is detrimental to super-resolution. Wronski et al. observed that ``areas prone to aliasing have large spatial variance even within a single frame" \cite{Wronski2019}.
+
+
+\todo[inline]{I don't know how much detail to go into the motion robustness algorithm}
+
 \subsection{Results}
+
+
 
 \subsubsection{Limitations}
 
 % ----------------------------------------
 \section{Handheld low light photography}
+\label{sec:handheldLowLight}
 
+Liba et al. \cite{Liba2019} introduce a system for capturing photos in very low light that produces improved color and less noise. The system uses ``motion metering" (Section~\ref{sec:motionMetering}) to enable motion aware burst merging (Section~\ref{sec:motionBurstMerging}). They also use a learning-based auto white balance algorithm (Section~\ref{sec:autoWhiteBal}) and tone mapping (Section~\ref{sec:toneMapping}) to produce better colors in low light.
 
+% The second primary source is ``Handheld Mobile Photography in Very Low Light" \cite{Liba2019}. This paper describes a new photography system (or pipeline) that improves the ability to capture photos in low light. This is done mainly through improvements in motion metering, motion-aware burst merging, and low-light optimized auto white balance. This system also builds on work done in \cite{Hasinoff2016}.
 
 \subsection{Motion Metering}
+\label{sec:motionMetering}
 
+When capturing a burst of images on a smartphone, the exposure time and gain (ISO) needs to be selected for each frame. Liba et al. use the same strategy as in \cite{Hasinoff2016} and capture all frames in the burst with the same exposure time and ISO. For effective low-light photography these settings need to be automatically selected within a set of constraints.
+
+The ``motion metering" described by Liba et al. selects the exposure time and gain by predicting future motion in the scene and motion of the camera itself. This is used to select slower exposures for scenes with no motion and shorter exposures for those with motion.
+
+\subsubsection{Motion prediction}
+
+\subsubsection{Stability detection}
+
+More experienced photographers often brace their device against a surface or put it on a tripod in low-light situations. If this can be detected, longer exposures can be used without risk of motion blur. Liba et al.'s motion metering system captures up to 333 ms exposures when handheld but when stabilized it captures up to 1 second exposures. To detect a stabilized device, measurements from the device's gyroscope are averaged over a short time, 1.466 s, before the shutter button was pressed while masking out the last 0.4 s of the measurements to prevent vibrations from the user pressing the shutter button from affecting the result.
+
+\subsubsection{Exposure time selection}
+
+\begin{figure}
+\centering
+\includegraphics[width=3in]{figures/liba2019-figure-7.pdf}
+\caption{ \cite{Liba2019}}
+\label{fig:BayerPattern}
+
+% Cameras typically encode the exposure time vs. gain tradeoff with
+% a static “exposure schedule”, depicted by the thicker blue line. If the ex-
+% posure schedule curve is higher, the camera favors higher SNR and more
+% motion blur, and if the curve is lower, the camera favors lower SNR and
+% less motion blur. Instead of a static schedule, we use a dynamic schedule
+% based on the measured scene motion. This allows the schedule to provide a
+% better tradeoff for the scene’s conditions. Zero motion (orange line) leads
+% to the slowest possible schedule, and as motion increases, the schedule
+% favors proportionally faster exposure times. The flat regions of the dynamic
+% exposure schedules denote the “blur-limiting exposure time" in Equation 6
+
+\end{figure}
 
 \subsection{Motion-adaptive burst merging}
+\label{sec:motionBurstMerging}
 
+For burst merging, Liba et al. built upon the Fourier domain temporal merging from Hasinoff et al. \cite{Hasinoff2016}. This is used on some devices while those with a fast enough system-on-chip use the merging method from Wronski et al. (Section~\ref{sec:handheldSuperRes}).
+
+\todo[inline]{don't know how much I need to talk about this if at all considering on modern phones the Wronski method is used anyway}
 
 \subsection{Auto white balance in low-light}
+\label{sec:autoWhiteBal}
+
+The Automatic White Balance (AWB) step in the camera pipeline is important to produce a pleasing image. The goal of AWB is to determine the color of the majority of the illumination in the scene and correct the colors in the image such that they appear to be lit by a neutral illumination. 
+%This is closely related to color constancy
 
 
+\todo[inline]{more}
 
 \subsection{Tone mapping}
+\label{sec:toneMapping}
+
+Tone mapping is the process of mapping colors from a high-dynamic-range image to a medium with a more limited dynamic range \cite{wiki:ToneMapping}. This is usually done by applying what are called tone mapping operators (TMOs). Some TMOs attempt to create results close to human vision, while others produce a more artistic rendition. Human vision loses color sensitivity as light levels are reduced. Liba et al. developed a TMO that maintains vibrant color in dark scenes without looking artificial with inspiration from Artistic techniques to maintain a nighttime aesthetic. Their TMO uses various heuristics on top of the tone mapping of Hasinoff et al. \cite{Hasinoff2016}. These include allowing higher overall gains, limiting the boosting of shadows, allowing compression of higher dynamic ranges, boosting the color saturation inversely to scene brightness, and adding a brightness-dependent vignette. \cite{Liba2019}
+
+\todo[inline]{explain these heuristics in more detail}
+
+\begin{figure}
+\centering
+%\psfig{file=figures/Bayer_pattern_on_sensor.pdf,width =3in}
+\begin{subfigure}{1in}
+\centering
+\includegraphics[width=1in]{figures/liba2019-figure-14a-95quality.jpg}
+\caption{Baseline}
+\label{fig:toneMapping:baseline}
+\end{subfigure}
+\begin{subfigure}{1in}
+\centering
+\includegraphics[width=1in]{figures/liba2019-figure-14b-95quality.jpg}
+\caption{CLAHE}
+\label{fig:toneMapping:clahe}
+\end{subfigure}
+\begin{subfigure}{1in}
+\centering
+\includegraphics[width=1in]{figures/liba2019-figure-14c-95quality.jpg}
+\caption{Liba et al.}
+\label{fig:toneMapping:liba}
+\end{subfigure}
+
+\caption{An example of tone mapping \cite{Liba2019}}
+\todo[inline]{needs better caption}
+% A nighttime scene (about 0.4 lux) that demonstrates the difficulty
+% in achieving balanced tonal quality. (a) The tone mapping of [Hasinoff et al .
+% 2016] results in most of the image being too dark and is not a pleasing
+% photograph. (b) Applying a tone mapping technique that brightens the
+% image using histogram equalization (CLAHE [Zuiderveld 1994]) reveals
+% more detail, but the photo lacks global contrast. (c) The photo with our tone
+% mapping retains the details of (b), but contains more global contrast and
+% enough dark areas to show that the captured scene is dark.
+
+\label{fig:toneMapping}
+\end{figure}
 
 
 \subsection{Results}
